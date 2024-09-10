@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+       
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+        body {
+            background-image: url('https://images.theconversation.com/files/442675/original/file-20220126-17-1i0g402.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1356&h=668&fit=crop');
+            background-size: cover;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            background: #5372F0;
+            font-size: 1.75rem;
+            text-align: center;
+            padding: 18px 0;
+            color: #fff;
+        }
+        .container {
+            display: flex;
+            gap: 35px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .weather-input {
+            width: 550px;
+        }
+        .weather-input input {
+            height: 46px;
+            width: 100%;
+            outline: none;
+            font-size: 1.07rem;
+            padding: 0 17px;
+            margin: 10px 0 20px 0;
+        }
+        .weather-data {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .current-weather {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <div class="container">
+        <div class="weather-input">
+            <input id="location" type="text" placeholder="Enter a city name">
+            <button id="search-btn">Search</button>
+        </div>
+        <div class="weather-data" id="weather-info"></div>
+    </div>
+
+    <script>
+        const apiKey = '1d8deb26247153af82010636b1e5f576';
+        const locationInput = document.getElementById('location');
+        const searchButton = document.getElementById('search-btn');
+        const weatherInfo = document.getElementById('weather-info');
+
+        searchButton.addEventListener('click', getWeather);
+
+        function getWeather() {
+            const location = locationInput.value;
+
+            if (!location) {
+                alert('Please enter a location.');
+                return;
+            }
+
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    weatherInfo.innerHTML = `
+                        <h2>${data.name}, ${data.sys.country}</h2>
+                        <p>Temperature: ${data.main.temp} °C</p>
+                        <p>Weather: ${data.weather[0].description}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    alert('Error fetching weather data. Please try again.');
+                });
+        }
+    </script>
+</body>
+</html>
